@@ -1,4 +1,5 @@
 import Login from './login';
+import CheckIn from './checkIn';
 import Loader from './loader';
 
-export {Login, Loader};
+export {Login, CheckIn, Loader};

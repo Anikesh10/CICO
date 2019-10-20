@@ -1,5 +1,5 @@
 import React from 'react';
-import {Loader, Login} from '../screens';
+import {Loader, Login, CheckIn} from '../screens';
 import {
   Scene,
   Router,
@@ -23,7 +23,8 @@ const Routes = () => {
     <Router>
       <Lightbox>
         <Stack key="root" titleStyle={{alignSelf: 'center'}} hideNavBar>
-          <Scene key="login" component={Login} title="Login" initial />
+          <Scene key="login" component={Login} title="Login" />
+          <Scene key="checkIn" component={CheckIn} title="CheckIn" initial />
         </Stack>
         {/* Lightbox components will lay over the screen, allowing transparency*/}
         <Scene key="loader" component={Loader} />

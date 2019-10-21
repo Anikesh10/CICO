@@ -5,27 +5,39 @@ import styled from 'styled-components/native';
 import TextBox from '../../components/textBox';
 import Button from '../../components/button';
 import {map} from 'lodash';
+import {Snackbar} from 'react-native-paper';
 
 // Import login page image
 const HomepageImage = require('../../assets/images/homepage.jpg');
 
-const renderFields = (input, handleInputChange, props) => {
-  return map(input, ({label, key}) => {
+const renderFields = (input, handleInputChange) => {
+  return map(input, ({label, key, editable, error, value}) => {
     return (
       <TextBox
         key={key}
         label={label}
-        value={props[key]}
+        value={value}
         onChangeText={text => handleInputChange(text, key)}
+        secureTextEntry={key === 'password'}
+        editable={editable}
+        error={error}
       />
     );
   });
 };
 
 const Login = props => {
-  let {handleInputChange, inputFields, handleLogin} = props;
+  let {handleInputChange, inputFields, handleLogin, error, setError} = props;
   return (
     <Wrapper>
+      <Snackbar
+        visible={error.flag}
+        duration={50000}
+        onDismiss={() => {
+          setError({flag: false, message: ''});
+        }}>
+        {error.message || `Unable to login. Please try again`}
+      </Snackbar>
       <Scrollable>
         <LoginBox>
           <Heading>CICO</Heading>

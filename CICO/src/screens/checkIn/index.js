@@ -1,106 +1,96 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Platform,
-  Image,
-  Text,
-  View,
-  Button,
-  Picker,
-  Alert,
-  TouchableHighlight,
-  TouchableOpacity,
-} from 'react-native';
-import {ToastAndroid} from 'react-native';
-import {Actions} from 'react-native-router-flux';
-import {AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 
-export default class Main extends React.Component {
-  state = {
-    status: false,
-    project: 'placeholder',
-  };
+import container from './container';
+import styled from 'styled-components/native';
+import {Appbar} from 'react-native-paper';
+import Picker from '../../components/picker';
+import Button from '../../components/button';
+import {Snackbar} from 'react-native-paper';
+import {get} from 'lodash';
 
-  static navigationOptions = {
-    header: null,
-  };
+const CheckIn = props => {
+  let {
+    setError,
+    error,
+    projectList,
+    onSelect,
+    changeStatus,
+    isCheckedIn,
+    handleLogout,
+  } = props;
+  return (
+    <Wrapper>
+      <Snackbar
+        visible={get(error, 'flag')}
+        duration={50000}
+        onDismiss={() => {
+          setError({flag: false, message: ''});
+        }}>
+        {get(error, 'message') || `Unable to login. Please try again`}
+      </Snackbar>
+      <Picker
+        placeholder="Please select a project."
+        options={projectList || []}
+        onSelect={onSelect}
+      />
 
-  onCheckHistory() {
-    Actions.history();
-  }
-
-  logout = async () => {
-    await AsyncStorage.removeItem('auth');
-    Actions.login();
-  };
-
-  changeStatus = () => {
-    if (this.state.project === 'placeholder') {
-      ToastAndroid.show('First select a project !', ToastAndroid.SHORT);
-    } else {
-      this.setState({
-        status: !this.state.status,
-      });
-    }
-  };
-  render() {
-    return (
-      <View style={styles.customcontainer}>
-        {!this.state.status ? (
-          <View style={styles.pickerDiv}>
-            <Text style={styles.projectLabel}>Select Project :</Text>
-            <View style={styles.cuspicker}>
-              <Picker
-                selectedValue={this.state.project}
-                onValueChange={(itemValue, itemIndex) => {
-                  this.setState({project: itemValue});
-                }}>
-                <Picker.Item label="Project Name" value="placeholder" />
-                <Picker.Item label="K1 2501" value="K1 2501" />
-                <Picker.Item label="SPEC" value="SPEC" />
-                <Picker.Item label="Total Oil" value="Total Oil" />
-                <Picker.Item label="C & D Building  " value="C & D Building" />
-              </Picker>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.nameDiv}>
-            <Text style={{fontSize: 20}}>Checked in at project</Text>
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-              {this.state.project}
-            </Text>
-          </View>
-        )}
-
-        <View style={styles.btnView}>
-          {!this.state.status ? (
-            <TouchableHighlight
-              style={styles.btn}
-              onPress={
-                // this.setState({ status: !this.state.status });
-                this.changeStatus
-              }
-              underlayColor="#a2dea0">
-              <Text style={styles.btnText}>Check In</Text>
-            </TouchableHighlight>
-          ) : (
-            <TouchableHighlight
-              style={styles.redbtn}
-              onPress={() => {
-                this.setState({status: !this.state.status});
-              }}
-              underlayColor="#de5766">
-              <Text style={styles.redbtnText}>Check Out</Text>
-            </TouchableHighlight>
-          )}
-        </View>
-        <TouchableOpacity onPress={this.logout}>
-          <Text>Logout</Text>
-        </TouchableOpacity>
+      <View style={styles.btnView}>
+        <StyledTouchableHighlight
+          style={styles.btn}
+          onPress={changeStatus}
+          underlayColor="#a2dea0"
+          isCheckedIn={isCheckedIn}>
+          <BtnText isCheckedIn={isCheckedIn}>
+            {isCheckedIn ? 'Check Out' : 'Check In'}
+          </BtnText>
+        </StyledTouchableHighlight>
       </View>
-    );
-  }
-}
+
+      <ButtonWrapper>
+        <Button title={'Logout'} mode="contained" onPress={handleLogout}>
+          Logout
+        </Button>
+      </ButtonWrapper>
+    </Wrapper>
+  );
+};
+
+export default container(CheckIn);
+
+const Wrapper = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.APP_COLOR.PRIMARY.MAIN};
+  padding: 30px 20px;
+`;
+
+const ButtonWrapper = styled.View`
+  width: 100%;
+  margin-top: 60%;
+`;
+
+const StyledTouchableHighlight = styled.TouchableHighlight`
+  background-color: ${props =>
+    props.isCheckedIn
+      ? props.theme.APP_COLOR.PRIMARY.TITLE
+      : props.theme.APP_COLOR.PRIMARY.LEVEL_1};
+  width: 150;
+  height: 150;
+  border-radius: 80;
+  justify-content: center;
+  border-color: ${props => props.theme.APP_COLOR.PRIMARY.TITLE};
+  border-width: 5px;
+`;
+
+const BtnText = styled.Text`
+  color: ${props =>
+    props.isCheckedIn
+      ? props.theme.APP_COLOR.PRIMARY.MAIN
+      : props.theme.APP_COLOR.PRIMARY.TITLE};
+  font-size: 20px;
+  align-self: center;
+`;
+
 const styles = StyleSheet.create({
   customcontainer: {
     backgroundColor: '#fff',
@@ -136,15 +126,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  btn: {
-    backgroundColor: '#57fa6d',
-    width: 150,
-    height: 150,
-    borderRadius: 80,
-    justifyContent: 'center',
-    borderColor: '#47a153',
-    borderWidth: 2,
-  },
+  btn: {},
   btnText: {
     color: '#fff',
     alignSelf: 'center',

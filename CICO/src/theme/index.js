@@ -1,6 +1,6 @@
 export const APP_COLOR = {
   PRIMARY: {
-    MAIN: '#212121', //Black
+    MAIN: '#111', //Black
     TITLE: '#fcd737', //Yellow
     LEVEL_1: '#424242', //Light grey
     LEVEL_2: '#7d7d7c', //Dark grey

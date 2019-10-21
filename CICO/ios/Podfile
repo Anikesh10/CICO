@@ -36,6 +36,7 @@ target 'CICO' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+
   target 'CICOTests' do
     inherit! :search_paths
     # Pods for testing

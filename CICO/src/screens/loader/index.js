@@ -21,7 +21,7 @@ const Wrapper = styled.View`
   left: 0;
   z-index: 10;
   background-color: ${props => props.theme.APP_COLOR.PRIMARY.MAIN};
-  opacity: 0.8;
+  opacity: 0.6;
   align-items: center;
   justify-content: center;
 `;

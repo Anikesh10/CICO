@@ -19,6 +19,7 @@ const CheckIn = props => {
     isCheckedIn,
     handleLogout,
   } = props;
+  console.log(props);
   return (
     <Wrapper>
       <Snackbar

@@ -11,4 +11,26 @@ const getProjectList = async body => {
   }
 };
 
-export {getProjectList};
+const checkinUser = async body => {
+  const url = '/checkIn';
+  try {
+    console.log('hit');
+    let response = await FetchUtils.postData(url, body, 'checkin user ==>');
+    console.log('hit', response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const checkoutUser = async body => {
+  const url = '/checkIn/checkout';
+  try {
+    let response = await FetchUtils.postData(url, body, 'checkout user ==>');
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {getProjectList, checkinUser, checkoutUser};

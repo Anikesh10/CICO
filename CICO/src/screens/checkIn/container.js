@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {getProjectList} from './duck/service';
+import {getProjectList, checkinUser, checkoutUser} from './duck/service';
 import {map, get} from 'lodash';
 import {Actions} from 'react-native-router-flux';
 const container = Main =>
   class CheckIn extends Component {
     state = {
       selectedProject: '',
+      isCheckedIn: false,
+      checkinDetails: {}
     };
     componentDidMount() {
       this.fetchProjectList();
@@ -44,17 +46,50 @@ const container = Main =>
     };
 
     onCheckOut = () => {
-      this.setState({
-        isCheckedIn: false,
-      });
+      let {_id} = this.state.checkinDetails;
+      let body = {
+        id: _id
+      };
+      let response = await checkoutUser(body);
+      if (!response.success) {
+        this.setError({
+          flag: true,
+          message: 'Unable to Check out. Please try again',
+        });
+      } else {
+        this.setError({flag: false, message: ''});
+        this.setState({
+          isCheckedIn: false,
+        });
+      }
+    };
+
+    setCheckIn = async project => {
+      let {email, name} = this.props.user;
+      let body = {
+        email,
+        name,
+        project_name: project,
+      };
+      let response = await checkinUser(body);
+      if (!response.success) {
+        this.setError({
+          flag: true,
+          message: 'Unable to Check in. Please try again',
+        });
+      } else {
+        this.setError({flag: false, message: ''});
+        this.setState({
+          isCheckedIn: true,
+          checkinDetails: response.data.transaction
+        });
+      }
     };
 
     onCheckIn = () => {
       let {selectedProject} = this.state;
       if (selectedProject) {
-        this.setState({
-          isCheckedIn: true,
-        });
+        this.setCheckIn(selectedProject.value);
       } else {
         this.setError({
           flag: true,

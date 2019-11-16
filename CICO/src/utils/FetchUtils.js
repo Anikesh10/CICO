@@ -9,7 +9,9 @@ const formatResponse = response => {
   if (
     response.status >= 200 &&
     response.status < 300 &&
-    (response.data.user || response.data.projectlist)
+    (response.data.user ||
+      response.data.projectlist ||
+      response.data.transaction)
   ) {
     return {
       code: response.status,
@@ -50,11 +52,10 @@ class FetchUtils {
   };
 
   postData = (url, body, log) => {
-    console.log(url, body);
     return axios
       .post(url, body)
       .then(function(response) {
-        console.log(log, response);
+        console.log('hello', response);
         // handle success
         return formatResponse(response);
       })

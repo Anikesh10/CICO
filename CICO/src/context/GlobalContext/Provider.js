@@ -28,6 +28,7 @@ class GlobalProvider extends Component {
     setError: this.setError,
   };
   render() {
+    console.log('context', this.state);
     return (
       <GlobalContext.Provider value={this.state}>
         {this.props.children}

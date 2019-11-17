@@ -1,13 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import container from './container';
 import styled from 'styled-components/native';
-import {Appbar} from 'react-native-paper';
+import Appbar from '../../components/appbar';
 import Picker from '../../components/picker';
 import Button from '../../components/button';
 import {Snackbar} from 'react-native-paper';
 import {get} from 'lodash';
+import {Actions} from 'react-native-router-flux';
 
 const CheckIn = props => {
   let {
@@ -18,42 +19,52 @@ const CheckIn = props => {
     changeStatus,
     isCheckedIn,
     handleLogout,
+    onClear,
   } = props;
-  console.log(props);
+
   return (
-    <Wrapper>
-      <Snackbar
-        visible={get(error, 'flag')}
-        duration={50000}
-        onDismiss={() => {
-          setError({flag: false, message: ''});
-        }}>
-        {get(error, 'message') || `Unable to login. Please try again`}
-      </Snackbar>
-      <Picker
-        placeholder="Please select a project."
-        options={projectList || []}
-        onSelect={onSelect}
+    <>
+      <Appbar
+        title={'Check In'}
+        onBack={() => {
+          Actions.pop();
+        }}
       />
+      <Wrapper>
+        <Snackbar
+          visible={get(error, 'flag')}
+          duration={5000}
+          onDismiss={() => {
+            setError({flag: false, message: ''});
+          }}>
+          {get(error, 'message')}
+        </Snackbar>
+        <Picker
+          placeholder="Please select a project."
+          options={projectList || []}
+          onSelect={onSelect}
+          onClear={onClear}
+        />
 
-      <View style={styles.btnView}>
-        <StyledTouchableHighlight
-          style={styles.btn}
-          onPress={changeStatus}
-          underlayColor="#a2dea0"
-          isCheckedIn={isCheckedIn}>
-          <BtnText isCheckedIn={isCheckedIn}>
-            {isCheckedIn ? 'Check Out' : 'Check In'}
-          </BtnText>
-        </StyledTouchableHighlight>
-      </View>
+        <View style={styles.btnView}>
+          <StyledTouchableHighlight
+            style={styles.btn}
+            onPress={changeStatus}
+            underlayColor="#a2dea0"
+            isCheckedIn={isCheckedIn}>
+            <BtnText isCheckedIn={isCheckedIn}>
+              {isCheckedIn ? 'Check Out' : 'Check In'}
+            </BtnText>
+          </StyledTouchableHighlight>
+        </View>
 
-      <ButtonWrapper>
-        <Button title={'Logout'} mode="contained" onPress={handleLogout}>
-          Logout
-        </Button>
-      </ButtonWrapper>
-    </Wrapper>
+        <ButtonWrapper>
+          <Button title={'Logout'} mode="contained" onPress={handleLogout}>
+            Logout
+          </Button>
+        </ButtonWrapper>
+      </Wrapper>
+    </>
   );
 };
 

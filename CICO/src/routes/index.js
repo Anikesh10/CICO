@@ -1,19 +1,12 @@
 import React from 'react';
 import {Loader, Login, CheckIn} from '../screens';
-import {
-  Scene,
-  Router,
-  Stack,
-  Lightbox,
-  ActionConst,
-} from 'react-native-router-flux';
+import {Scene, Router, Stack, Lightbox} from 'react-native-router-flux';
 import GlobalContext from '../context/GlobalContext';
 
 const Routes = props => {
   return (
     <GlobalContext.Consumer>
       {contextProps => {
-        console.log('contextProps', contextProps);
         return (
           <Router>
             <Lightbox key="modal">

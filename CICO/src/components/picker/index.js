@@ -6,12 +6,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class CustomExample extends React.Component {
   render() {
-    let {onSelect} = this.props;
+    let {onSelect, onClear} = this.props;
     return (
       <CustomPicker
         {...this.props}
         getLabel={item => item.label}
-        fieldTemplate={this.renderField}
+        fieldTemplate={setting => this.renderField(setting, onClear)}
         optionTemplate={this.renderOption}
         headerTemplate={this.renderHeader}
         onValueChange={onSelect && onSelect}
@@ -47,7 +47,7 @@ export class CustomExample extends React.Component {
     );
   }
 
-  renderField(settings) {
+  renderField(settings, onClear) {
     const {selectedItem, defaultText, getLabel, clear} = settings;
     let isSelected = selectedItem;
     return (
@@ -58,7 +58,11 @@ export class CustomExample extends React.Component {
           </DropdownText>
         </TextWrapper>
         {isSelected ? (
-          <StyledTouchable onPress={isSelected && clear}>
+          <StyledTouchable
+            onPress={() => {
+              isSelected && clear();
+              isSelected && onClear();
+            }}>
             <IconWrapper name="times-circle" size={30} isSelected />
           </StyledTouchable>
         ) : (

@@ -53,10 +53,9 @@ const container = Main =>
         if (!response.success) {
           setError({flag: true, message: get(response, 'data.message')});
         } else {
-          console.log(response);
           setProfile(response.data.user);
           setError({flag: false, message: ''});
-          Actions.checkIn({user: response.data.user});
+          Actions.replace('checkIn', {user: response.data.user});
         }
       }
     };

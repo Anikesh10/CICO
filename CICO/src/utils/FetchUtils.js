@@ -11,7 +11,8 @@ const formatResponse = response => {
     response.status < 300 &&
     (response.data.user ||
       response.data.projectlist ||
-      response.data.transaction)
+      response.data.transaction ||
+      response.data.status)
   ) {
     return {
       code: response.status,

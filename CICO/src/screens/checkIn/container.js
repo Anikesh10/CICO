@@ -7,7 +7,7 @@ const container = Main =>
     state = {
       selectedProject: '',
       isCheckedIn: false,
-      checkinDetails: {}
+      checkinDetails: {},
     };
     componentDidMount() {
       this.fetchProjectList();
@@ -45,12 +45,19 @@ const container = Main =>
       }
     };
 
-    onCheckOut = () => {
+    onClear = () => {
+      this.setState({
+        selectedProject: '',
+      });
+    };
+
+    onCheckOut = async () => {
       let {_id} = this.state.checkinDetails;
       let body = {
-        id: _id
+        id: _id,
       };
       let response = await checkoutUser(body);
+
       if (!response.success) {
         this.setError({
           flag: true,
@@ -81,7 +88,7 @@ const container = Main =>
         this.setError({flag: false, message: ''});
         this.setState({
           isCheckedIn: true,
-          checkinDetails: response.data.transaction
+          checkinDetails: response.data.transaction,
         });
       }
     };
@@ -119,6 +126,7 @@ const container = Main =>
         changeStatus: this.changeStatus,
         setError: this.setError,
         handleLogout: this.handleLogout,
+        onClear: this.onClear,
       };
 
       return <Main {...ComponentProps} />;

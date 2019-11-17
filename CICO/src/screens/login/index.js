@@ -32,7 +32,7 @@ const Login = props => {
     <Wrapper>
       <Snackbar
         visible={error.flag}
-        duration={50000}
+        duration={5000}
         onDismiss={() => {
           setError({flag: false, message: ''});
         }}>
